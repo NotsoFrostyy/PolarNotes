@@ -23,7 +23,7 @@ open_status_name = False
 
 # Open Github Repo
 new = 1
-url = "https://github.com/NotsoFrostyy"
+url = "https://github.com/NotsoFrostyy/PolarNotes"
 
 
 def openweb():
