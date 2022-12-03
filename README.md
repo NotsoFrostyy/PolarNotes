@@ -2,13 +2,13 @@
 PolarNotes is an experimental text based notepad with advanced features such as searching text with youtube, github and duckduckgo. It also allows changing the color of text and the use of italics and bolding and switching between light and dark themes.
 
 ## Features
-- light and dark themes
-- searching with youtube
-- searching with duckduckgo
-- searching with github
-- changing color of text
-- bolding text
-- italic text
+- Light and dark themes
+- Searching with Youtube
+- Searching with DuckDuckGo
+- Searching with Github
+- Changing color of text
+- Bolding text
+- Italic text
 - Undo and Redo
 
 ## Examples
