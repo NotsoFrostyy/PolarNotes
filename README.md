@@ -12,7 +12,8 @@ PolarNotes is an experimental text based notepad with advanced features such as 
 - Undo and Redo
 
 ## Examples
-![Example1](https://user-images.githubusercontent.com/99787566/205431277-f5ac291b-7d38-4b58-9fca-dedf5cfe92fe.PNG)
+
+![Example1](https://user-images.githubusercontent.com/99787566/205431852-e923ced2-6181-4418-92f7-878bc63c5298.PNG)
 
 ![Example2](https://user-images.githubusercontent.com/99787566/205431318-339f9fe3-b233-4afb-90f2-08737379c9ed.PNG)
 
