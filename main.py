@@ -11,23 +11,28 @@ from tkinter import colorchooser
 root = Tk()
 root.title("PolarNotes")
 root.iconbitmap('icon.ico')
-root.geometry("1200x700")
+root.geometry("600x500")
 root.tk.call("source", "sun-valley.tcl")
 root.tk.call("set_theme", "dark")
-root.resizable(False, False)
+root.state('normal')
+
 # Setting global variable for open file name
 global open_status_name
 global selected
 selected = False
 open_status_name = False
 
-# Open Github Repo
-new = 1
-url = "https://github.com/NotsoFrostyy/PolarNotes"
+
+def pop_menu(event):
+    try:
+        rightClick_menu.tk_popup(event.x_root, event.y_root)
+
+    finally:
+        rightClick_menu.grab_release()
 
 
 def openweb():
-    webbrowser.open(url, new=new)
+    webbrowser.open_new_tab("https://github.com/NotsoFrostyy/PolarNotes")
 
 # About tile
 
@@ -250,39 +255,34 @@ def clear_all():
 
 
 def update(event):
-    status.config(text="Word Count: " +
-                  str(len(text.get("1.0", 'end-1c'))))
+    BottomBar.config(text="Word Count: " +
+                     str(len(text.get("1.0", 'end-1c'))))
 
 
 # create toolbar frame
-toolbar = Frame(root)
+toolbar = Frame(root, height=50)
 toolbar.pack(fill=X)
 
 
-# create main frame
-frame = Frame(root)
-frame.pack()
-
 # scroll bar for text box
-text_scroll = Scrollbar(frame)
+text_scroll = Scrollbar(root)
 text_scroll.pack(side=RIGHT, fill=Y)
 
-hor_text_scroll = Scrollbar(frame, orient='horizontal')
-hor_text_scroll.pack(side=BOTTOM, fill=X)
 
 # create text box
-text = Text(frame, width=100, height=25, font=("Arial", 16), fg="White", bg="#1e2124",
-            selectforeground="white", undo=True, yscrollcommand=text_scroll.set, xscrollcommand=hor_text_scroll.set, wrap="none")
-text.pack()
+text = Text(root, borderwidth=0, height=48, font=("Arial", 16), fg="White", bg="#1e2124",
+            selectforeground="white", undo=True, yscrollcommand=text_scroll.set, wrap="none")
+
+text.focus_set()
+
 
 # scroll conmfig
 text_scroll.config(command=text.yview)
-hor_text_scroll.config(command=text.xview)
 
 
 # menu bar
 menu = Menu(root)
-root.config(menu=menu, bg="#555555")
+root.config(menu=menu, bg="#1e2124")
 
 # add file menu
 file_menu = Menu(menu, tearoff=False,)
@@ -308,13 +308,7 @@ edit_menu.add_command(
     label="Undo", command=text.edit_undo, accelerator="Ctrl+Z")
 edit_menu.add_command(
     label="Redo", command=text.edit_redo, accelerator="Ctrl+Y")
-edit_menu.add_separator()
-edit_menu.add_command(label="Search with Youtube",
-                      command=lambda: ytsearch(''), accelerator="Ctrl+E")
-edit_menu.add_command(label="Search with Github",
-                      command=lambda: gitsearch(''), accelerator="Ctrl+G")
-edit_menu.add_command(label="Search with DuckDuckGo",
-                      command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
+
 edit_menu.add_separator()
 edit_menu.add_command(label="Select All",
                       command=lambda: select_all(False), accelerator="Ctrl+A")
@@ -331,6 +325,14 @@ tools_menu.add_command(label="Change color of All Text",
 tools_menu.add_separator()
 tools_menu.add_command(label="Bold Selected Text", command=BoldIt)
 tools_menu.add_command(label="Italic Selected Text", command=ItalicIt)
+tools_menu.add_separator()
+tools_menu.add_command(label="Search with Youtube",
+                       command=lambda: ytsearch(''), accelerator="Ctrl+E")
+tools_menu.add_command(label="Search with Github",
+                       command=lambda: gitsearch(''), accelerator="Ctrl+G")
+tools_menu.add_command(label="Search with DuckDuckGo",
+                       command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
+
 
 # Help menu
 help_menu = Menu(menu, tearoff=False)
@@ -352,7 +354,7 @@ root.bind('<Control-Key-a>', select_all)
 root.bind('<Control-Key-s>', filesave)
 text.bind('<KeyPress>', update)
 text.bind('<KeyRelease>', update)
-
+text.bind("<Button - 3>", pop_menu)
 # create buttons for toolbar
 
 undo_icon = PhotoImage(file='icon_undo.png')
@@ -372,28 +374,62 @@ def click_theme():
         root.tk.call("set_theme", "light")
         text.config(bg='white', foreground='#1e2124')
         theme_button.config(text="Dark Mode")
-        status.config(background='white', foreground='#1e2124')
+        BottomBar.config(background='white', foreground='#1e2124')
         file_menu.config(bg="white", fg='#1e2124')
         edit_menu.config(bg="white", fg='#1e2124')
         tools_menu.config(bg="white", fg='#1e2124')
         help_menu.config(bg="white", fg='#1e2124')
-
+        root.config(bg="white")
+        rightClick_menu.config(bg="white", fg='#1e2124')
     else:
         root.tk.call("set_theme", "dark")
         text.config(bg='#1e2124', fg='white')
         theme_button.config(text="Light Mode")
-        status.config(background='#1e2124', foreground='white')
+        BottomBar.config(background='#1e2124', foreground='white')
         file_menu.config(bg="#1e2124", fg='white')
         edit_menu.config(bg="#1e2124", fg='white')
         tools_menu.config(bg="#1e2124", fg='white')
         help_menu.config(bg="#1e2124", fg='white')
+        root.config(bg="#1e2124")
+        rightClick_menu.config(bg="#1e2124", fg='white')
 
+
+# Right click menu
+rightClick_menu = Menu(text, tearoff=0, bg="#1e2124")
+
+rightClick_menu.add_command(label="Cut", command=lambda: cut_text(
+    False))
+rightClick_menu.add_command(label="Copy", command=lambda: copy_text(
+    False))
+rightClick_menu.add_command(label="Paste", command=lambda: paste_text(
+    False))
+rightClick_menu.add_separator()
+rightClick_menu.add_command(
+    label="Undo", command=text.edit_undo, accelerator="Ctrl+Z")
+rightClick_menu.add_command(
+    label="Redo", command=text.edit_redo, accelerator="Ctrl+Y")
+rightClick_menu.add_separator()
+rightClick_menu.add_command(label="Search with Youtube",
+                            command=lambda: ytsearch(''), accelerator="Ctrl+E")
+rightClick_menu.add_command(label="Search with Github",
+                            command=lambda: gitsearch(''), accelerator="Ctrl+G")
+rightClick_menu.add_command(label="Search with DuckDuckGo",
+                            command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
+rightClick_menu.add_separator()
+rightClick_menu.add_command(label="Select All",
+                            command=lambda: select_all(False), accelerator="Ctrl+A")
+rightClick_menu.add_command(
+    label="Clear All", command=clear_all, accelerator="Ctrl+")
 
 theme_button = ttk.Button(toolbar, text="Light Mode", command=click_theme)
 theme_button.grid(row=0, column=2, sticky=E, padx=5)
 
-status = Label(root, text='Word Count: 0 ', anchor=W,
-               background="#1e2124", foreground="white",)
-status.pack(fill=X, side=BOTTOM, ipady=15)
+BtmFrame = Frame(root, height=10)
+BtmFrame.pack(side=BOTTOM, fill=X)
 
+BottomBar = Label(BtmFrame, text='Word Count: 0 ',
+                  background="#1e2124", foreground="white", font=(24))
+BottomBar.pack(side=LEFT)
+
+text.pack(fill=BOTH, side=TOP)
 root.mainloop()
