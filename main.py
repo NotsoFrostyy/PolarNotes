@@ -331,6 +331,7 @@ tools_menu.add_command(label="Change color of All Text",
 tools_menu.add_separator()
 tools_menu.add_command(label="Bold Selected Text", command=BoldIt)
 tools_menu.add_command(label="Italic Selected Text", command=ItalicIt)
+
 # Help menu
 help_menu = Menu(menu, tearoff=False)
 menu.add_cascade(label="Help", menu=help_menu)
