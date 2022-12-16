@@ -8,33 +8,42 @@ from tkinter.ttk import *
 from tkinter import font, ttk
 from tkinter import colorchooser
 
+# Application Base
 root = Tk()
 root.title("PolarNotes")
 root.iconbitmap('icon.ico')
-root.geometry("600x500")
+root.geometry("1400x800")
 root.tk.call("source", "sun-valley.tcl")
 root.tk.call("set_theme", "dark")
 root.state('normal')
+root.resizable(True, True)
 
-# Setting global variable for open file name
+# Setting up global variables
 global open_status_name
 global selected
+global font1
+
+font1 = ['Arial', 16]
 selected = False
 open_status_name = False
 
+# right click menu
 
-def pop_menu(event):
+
+def rclick_menu(event):
     try:
         rightClick_menu.tk_popup(event.x_root, event.y_root)
 
     finally:
         rightClick_menu.grab_release()
 
+# Open Github Repo
+
 
 def openweb():
     webbrowser.open_new_tab("https://github.com/NotsoFrostyy/PolarNotes")
 
-# About tile
+# About Tile
 
 
 def about():
@@ -80,6 +89,8 @@ def fileopen():
     # close the opened file
     text_file.close()
 
+# Save file as
+
 
 def filesaveas():
     text_file = filedialog.asksaveasfilename(defaultextension=".*", initialdir="C:/desktop/", title="Save File", filetypes=(
@@ -105,6 +116,7 @@ def filesave(e):
         text_file = open(open_status_name, 'w')
         text_file.write(text.get(1.0, END))
         text_file.close()
+        # update status bars
         root.title(f'Saved: {open_status_name}        ')
     else:
         filesaveas()
@@ -166,6 +178,8 @@ def ytsearch(e):
         link = "https://www.youtube.com/results?search_query=" + s
         webbrowser.open_new_tab(link)
 
+# Search with Github
+
 
 def gitsearch(e):
     global selected
@@ -175,6 +189,8 @@ def gitsearch(e):
         s = str(selected.replace("git", ""))
         link = "https://github.com/search?q=" + s
         webbrowser.open_new_tab(link)
+
+# Search with DuckDuckGo
 
 
 def dckdckgosearch(e):
@@ -186,13 +202,17 @@ def dckdckgosearch(e):
         link = "https://duckduckgo.com/?q=" + s
         webbrowser.open_new_tab(link)
 
+# Shortcuts tile
+
 
 def shortcuts():
     messagebox.showinfo(
         "Shorcuts", "CTRL+G - Search With Github \nCTRL+E - Search With Youtube \nCTRL+H - Search with DuckDuckGo")
 
+# Bold Slected Text
 
-def BoldIt():
+
+def BoldText():
     # Create font
     bold_font = font.Font(text, text.cget("font"))
     bold_font.configure(weight="bold")
@@ -208,7 +228,7 @@ def BoldIt():
         text.tag_add("bold", "sel.first", "sel.last")
 
 
-def ItalicIt():
+def ItalicText():
     italic_font = font.Font(text, text.cget("font"))
     italic_font.configure(slant="italic")
 
@@ -221,6 +241,8 @@ def ItalicIt():
         text.tag_remove("italic", "sel.first", "sel.last")
     else:
         text.tag_add("italic", "sel.first", "sel.last")
+
+# Change Text Color
 
 
 def text_color():
@@ -238,45 +260,71 @@ def text_color():
         else:
             text.tag_add("colored", "sel.first", "sel.last")
 
+# Change Color of all text
 
-def all_text_colour():
+
+def all_text_color():
     colorset = colorchooser.askcolor()[1]
     if colorset:
         text.config(fg=colorset)
+
+# Select all text
 
 
 def select_all(e):
     # Add sel Tag to select all text
     text.tag_add('sel', '1.0', 'end')
 
+# Clear all text
+
 
 def clear_all():
     text.delete(1.0, END)
+
+# Word count
 
 
 def update(event):
     BottomBar.config(text="Word Count: " +
                      str(len(text.get("1.0", 'end-1c'))))
 
+# Zoom
+
+
+def Zoomed(zoom_input):
+    global font1
+
+    if(zoom_input == 'plus'):
+        font1[1] = font1[1]+2
+    else:
+        font1[1] = font1[1]-2
+
+    text.config(font=font1)
+
+# Reset Zoom
+
+
+def reset_font_size():
+    global font1
+    font1[1] = 16
+    text.config(font=('Arial', 16))
+
 
 # create toolbar frame
 toolbar = Frame(root, height=50)
 toolbar.pack(fill=X)
 
-
 # scroll bar for text box
 text_scroll = Scrollbar(root)
 text_scroll.pack(side=RIGHT, fill=Y)
 
-
 # create text box
-text = Text(root, borderwidth=0, height=48, font=("Arial", 16), fg="White", bg="#1e2124",
+text = Text(root, borderwidth=0, height=48, font=font1, fg="White", bg="#1e2124",
             selectforeground="white", undo=True, yscrollcommand=text_scroll.set, wrap="none")
-
 text.focus_set()
 
 
-# scroll conmfig
+# scroll config
 text_scroll.config(command=text.yview)
 
 
@@ -294,6 +342,7 @@ file_menu.add_command(label="Save As", command=filesaveas)
 file_menu.add_separator()
 file_menu.add_command(label="Exit", command=root.quit)
 
+
 # add edit menu
 edit_menu = Menu(menu, tearoff=False)
 menu.add_cascade(label="Edit", menu=edit_menu)
@@ -308,12 +357,12 @@ edit_menu.add_command(
     label="Undo", command=text.edit_undo, accelerator="Ctrl+Z")
 edit_menu.add_command(
     label="Redo", command=text.edit_redo, accelerator="Ctrl+Y")
-
 edit_menu.add_separator()
 edit_menu.add_command(label="Select All",
                       command=lambda: select_all(False), accelerator="Ctrl+A")
 edit_menu.add_command(
     label="Clear All", command=clear_all, accelerator="Ctrl+")
+
 
 # Tools Menu
 tools_menu = Menu(menu, tearoff=False)
@@ -321,10 +370,10 @@ menu.add_cascade(label="Tools", menu=tools_menu)
 tools_menu.add_command(
     label="Change color of selected Text ", command=text_color)
 tools_menu.add_command(label="Change color of All Text",
-                       command=all_text_colour)
+                       command=all_text_color)
 tools_menu.add_separator()
-tools_menu.add_command(label="Bold Selected Text", command=BoldIt)
-tools_menu.add_command(label="Italic Selected Text", command=ItalicIt)
+tools_menu.add_command(label="Bold Selected Text", command=BoldText)
+tools_menu.add_command(label="Italic Selected Text", command=ItalicText)
 tools_menu.add_separator()
 tools_menu.add_command(label="Search with Youtube",
                        command=lambda: ytsearch(''), accelerator="Ctrl+E")
@@ -334,12 +383,22 @@ tools_menu.add_command(label="Search with DuckDuckGo",
                        command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
 
 
+# Window menu
+view_menu = Menu(menu, tearoff=False)
+menu.add_cascade(label="View", menu=view_menu)
+view_menu.add_command(label="Zoom In", command=lambda: Zoomed('plus'))
+view_menu.add_command(label="Zoom Out", command=lambda: Zoomed('minus'))
+view_menu.add_command(label="Reset Zoom", command=reset_font_size)
+view_menu.add_separator()
+
+
 # Help menu
 help_menu = Menu(menu, tearoff=False)
 menu.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="Github Repo", command=openweb)
 help_menu.add_command(label="About", command=about)
 help_menu.add_command(label="Shortcut", command=shortcuts)
+
 
 # edit binding
 root.bind('<Control-Key-x>', cut_text)
@@ -350,13 +409,13 @@ root.bind('<Control-Key-e>', ytsearch)
 root.bind('<Control-Key-g>', gitsearch)
 root.bind('<Control-Key-h>', dckdckgosearch)
 root.bind('<Control-Key-a>', select_all)
-root.bind('<Control-Key-a>', select_all)
 root.bind('<Control-Key-s>', filesave)
 text.bind('<KeyPress>', update)
 text.bind('<KeyRelease>', update)
-text.bind("<Button - 3>", pop_menu)
+text.bind("<Button - 3>", rclick_menu)
 # create buttons for toolbar
 
+# Undo And redo
 undo_icon = PhotoImage(file='icon_undo.png')
 redo_icon = PhotoImage(file='icon_redo.png')
 UndoBtn = Button(toolbar, image=undo_icon, command=text.edit_undo)
@@ -364,6 +423,8 @@ UndoBtn.grid(row=0, column=0, sticky=W, padx=5)
 
 RedoBtn = Button(toolbar, image=redo_icon, command=text.edit_redo)
 RedoBtn.grid(row=0, column=1, sticky=W, padx=5)
+
+# Changing Theme
 
 
 def click_theme():
@@ -379,8 +440,10 @@ def click_theme():
         edit_menu.config(bg="white", fg='#1e2124')
         tools_menu.config(bg="white", fg='#1e2124')
         help_menu.config(bg="white", fg='#1e2124')
+        view_menu.config(bg="white", fg='#1e2124')
         root.config(bg="white")
         rightClick_menu.config(bg="white", fg='#1e2124')
+
     else:
         root.tk.call("set_theme", "dark")
         text.config(bg='#1e2124', fg='white')
@@ -390,11 +453,15 @@ def click_theme():
         edit_menu.config(bg="#1e2124", fg='white')
         tools_menu.config(bg="#1e2124", fg='white')
         help_menu.config(bg="#1e2124", fg='white')
+        view_menu.config(bg="#1e2124", fg='white')
         root.config(bg="#1e2124")
         rightClick_menu.config(bg="#1e2124", fg='white')
 
 
-# Right click menu
+theme_button = ttk.Button(toolbar, text="Light Mode", command=click_theme)
+theme_button.grid(row=0, column=2, sticky=E, padx=5)
+
+# Setting Right click menu
 rightClick_menu = Menu(text, tearoff=0, bg="#1e2124")
 
 rightClick_menu.add_command(label="Cut", command=lambda: cut_text(
@@ -421,15 +488,14 @@ rightClick_menu.add_command(label="Select All",
 rightClick_menu.add_command(
     label="Clear All", command=clear_all, accelerator="Ctrl+")
 
-theme_button = ttk.Button(toolbar, text="Light Mode", command=click_theme)
-theme_button.grid(row=0, column=2, sticky=E, padx=5)
-
+# Status bar and Bottom Bar
 BtmFrame = Frame(root, height=10)
 BtmFrame.pack(side=BOTTOM, fill=X)
 
 BottomBar = Label(BtmFrame, text='Word Count: 0 ',
                   background="#1e2124", foreground="white", font=(24))
 BottomBar.pack(side=LEFT)
+
 
 text.pack(fill=BOTH, side=TOP)
 root.mainloop()
