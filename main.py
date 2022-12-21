@@ -12,11 +12,12 @@ from tkinter import colorchooser
 root = Tk()
 root.title("PolarNotes")
 root.iconbitmap('icon.ico')
-root.geometry("1400x800")
+root.geometry("1400x800+200+200")
 root.tk.call("source", "sun-valley.tcl")
 root.tk.call("set_theme", "dark")
 root.state('normal')
 root.resizable(True, True)
+
 
 # Setting up global variables
 global open_status_name
@@ -50,6 +51,17 @@ def about():
     messagebox.showinfo(
         'Frost Software', 'PolarNotes is an experimental notepad containing advanced features, find out more at the github repo at @Notsofrostyy')
 
+
+def current_version():
+    messagebox.showinfo('Current Version', 'V1.0.1')
+
+# bug report function
+
+
+def bug_report():
+    webbrowser.open_new_tab(
+        "https://github.com/NotsoFrostyy/PolarNotes/issues/new")
+
 # New file creation
 
 
@@ -68,7 +80,7 @@ def fileopen():
     text.delete("1.0", END)
     # Grab file name
     text_file = filedialog.askopenfilename(initialdir="C:/gui/", title="Open File", filetypes=(
-        ("Text Files", "*.txt"), ("HTML Files", "*.html"), ("Python Files", "*.py"), ("All Files", "*.*")))
+        ("Text Files", "*.txt"), ("HTML Files", "*.html"), ("Python Files", "*.py"), ("JavaScript files", ".js"), ("All Files", "*.*")))
 
     if text_file:
         # make filename global so we can access it
@@ -227,6 +239,8 @@ def BoldText():
     else:
         text.tag_add("bold", "sel.first", "sel.last")
 
+# italic selected text
+
 
 def ItalicText():
     italic_font = font.Font(text, text.cget("font"))
@@ -310,6 +324,10 @@ def reset_font_size():
     text.config(font=('Arial', 16))
 
 
+def reset_window():
+    root.geometry("1400x800+200+200")
+
+
 # create toolbar frame
 toolbar = Frame(root, height=50)
 toolbar.pack(fill=X)
@@ -390,7 +408,7 @@ view_menu.add_command(label="Zoom In", command=lambda: Zoomed('plus'))
 view_menu.add_command(label="Zoom Out", command=lambda: Zoomed('minus'))
 view_menu.add_command(label="Reset Zoom", command=reset_font_size)
 view_menu.add_separator()
-
+view_menu.add_command(label="Reset Window", command=reset_window)
 
 # Help menu
 help_menu = Menu(menu, tearoff=False)
@@ -398,7 +416,9 @@ menu.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="Github Repo", command=openweb)
 help_menu.add_command(label="About", command=about)
 help_menu.add_command(label="Shortcut", command=shortcuts)
-
+help_menu.add_command(label="Bug Report", command=bug_report)
+help_menu.add_separator()
+help_menu.add_command(label="Current Version", command=current_version)
 
 # edit binding
 root.bind('<Control-Key-x>', cut_text)
@@ -413,7 +433,6 @@ root.bind('<Control-Key-s>', filesave)
 text.bind('<KeyPress>', update)
 text.bind('<KeyRelease>', update)
 text.bind("<Button - 3>", rclick_menu)
-# create buttons for toolbar
 
 # Undo And redo
 undo_icon = PhotoImage(file='icon_undo.png')
