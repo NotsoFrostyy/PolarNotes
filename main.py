@@ -379,7 +379,7 @@ edit_menu.add_separator()
 edit_menu.add_command(label="Select All",
                       command=lambda: select_all(False), accelerator="Ctrl+A")
 edit_menu.add_command(
-    label="Clear All", command=clear_all, accelerator="Ctrl+")
+    label="Clear All", command=clear_all)
 
 
 # Tools Menu
@@ -484,11 +484,11 @@ theme_button.grid(row=0, column=2, sticky=E, padx=5)
 rightClick_menu = Menu(text, tearoff=0, bg="#1e2124")
 
 rightClick_menu.add_command(label="Cut", command=lambda: cut_text(
-    False))
+    False), accelerator="Ctrl+X")
 rightClick_menu.add_command(label="Copy", command=lambda: copy_text(
-    False))
+    False), accelerator="Ctrl+C")
 rightClick_menu.add_command(label="Paste", command=lambda: paste_text(
-    False))
+    False), accelerator="Ctrl+V")
 rightClick_menu.add_separator()
 rightClick_menu.add_command(
     label="Undo", command=text.edit_undo, accelerator="Ctrl+Z")
@@ -505,7 +505,7 @@ rightClick_menu.add_separator()
 rightClick_menu.add_command(label="Select All",
                             command=lambda: select_all(False), accelerator="Ctrl+A")
 rightClick_menu.add_command(
-    label="Clear All", command=clear_all, accelerator="Ctrl+")
+    label="Clear All", command=clear_all)
 
 # Status bar and Bottom Bar
 BtmFrame = Frame(root, height=10)
