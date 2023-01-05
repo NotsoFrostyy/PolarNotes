@@ -7,6 +7,8 @@ from tkinter import messagebox
 from tkinter.ttk import *
 from tkinter import font, ttk
 from tkinter import colorchooser
+from pytube import YouTube
+from tkinter.font import BOLD
 
 # Application Base
 root = Tk()
@@ -28,6 +30,45 @@ font1 = ['Arial', 16]
 selected = False
 open_status_name = False
 
+
+def new_window():
+
+    window = Toplevel()
+    window.geometry('300x300')
+    window.title('Youtube Downloader')
+    window.config(background='#1e2124')
+
+    title = Label(window, text="Youtube Downloader",
+                  font=('Arial', 12, BOLD), background='#1e2124', foreground='#ED9121')
+    title.pack()
+
+    link_input = Label(window, text="Paste link here",
+                       font=(3), background='#1e2124', foreground='white')
+    link_input.pack(pady=10)
+
+    set_link = StringVar()
+
+    pastelink = Entry(window, width=30, textvariable=set_link)
+    pastelink.pack(pady=5)
+
+    def chooseDir():
+        global video_location
+        path = filedialog.askdirectory(title="Choose a download directory")
+        video_location = path
+        Label(window, text=path, background='black').place(x=240, y=300)
+
+    def downloadVideo():
+        ytbLink = set_link.get()
+        ytbvideo = YouTube(ytbLink).streams.filter(
+            progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+        ytbvideo.download(video_location)
+        messagebox.showinfo(
+            "Polar Notes ", "Success, Your video has been Downloaded")
+
+    Button(window, text="Download", width=20,
+           command=downloadVideo).pack(pady=15)
+    Button(window, text="Choose Save Location", width=20,
+           command=chooseDir).pack(pady=15)
 # right click menu
 
 
@@ -399,6 +440,8 @@ tools_menu.add_command(label="Search with Github",
                        command=lambda: gitsearch(''), accelerator="Ctrl+G")
 tools_menu.add_command(label="Search with DuckDuckGo",
                        command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
+tools_menu.add_separator()
+tools_menu.add_command(label="YouTube Video Downloader", command=new_window)
 
 
 # Window menu
