@@ -17,5 +17,11 @@ PolarNotes is an experimental text based notepad with advanced features such as 
 
 ![Example2](https://user-images.githubusercontent.com/99787566/205431318-339f9fe3-b233-4afb-90f2-08737379c9ed.PNG)
 
+## To-Do
+✔ YouTube Video Downloader
+🔳Performance Fixes
+🔳 Fix Theme Issues
+
+
 ## Credits
 ttk Theme used: https://github.com/rdbende/Sun-Valley-ttk-theme
