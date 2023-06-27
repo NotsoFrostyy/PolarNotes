@@ -88,9 +88,16 @@ def reset_transparency():
     root.attributes('-alpha', 1.0)
 
 
-def transparency():
+def medium_transparency():
     root.attributes('-alpha', 0.5)
 
+
+def high_transparency():
+    root.attributes('-alpha', 0.25)
+
+
+def low_transparency():
+    root.attributes('-alpha', 0.75)
 # Open Github Repo
 
 
@@ -447,7 +454,9 @@ tools_menu.add_command(label="Search with DuckDuckGo",
                        command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
 tools_menu.add_command(label="YouTube Video Downloader", command=new_window)
 tools_menu.add_separator()
-tools_menu.add_command(label="Half Transparency", command=transparency)
+tools_menu.add_command(label="25% Transparency", command=low_transparency)
+tools_menu.add_command(label="50% Transparency", command=medium_transparency)
+tools_menu.add_command(label="75% Transparency", command=high_transparency)
 tools_menu.add_command(label="Reset Transparency", command=reset_transparency)
 
 # Window menu
