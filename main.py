@@ -6,15 +6,14 @@ import webbrowser
 from tkinter import messagebox
 from tkinter.ttk import *
 from tkinter import font, ttk
-from tkinter import colorchooser
 from pytube import YouTube
 from tkinter.font import BOLD
 
 # Application Base
 root = Tk()
-root.title("PolarNotes")
-root.iconbitmap('icon.ico')
-root.geometry("1400x800+200+200")
+root.title("Polar Notes")
+root.iconbitmap('assets/icon.ico')
+root.geometry("800x600+100+50")
 root.tk.call("source", "sun-valley.tcl")
 root.tk.call("set_theme", "dark")
 root.state('normal')
@@ -25,14 +24,14 @@ root.resizable(True, True)
 global open_status_name
 global selected
 global font1
-
+#Creating Variables and setting fonts
 font1 = ['Arial', 16]
 selected = False
 open_status_name = False
 
 
 def new_window():
-
+    #Creating Side Window for YT Video Downloader
     window = Toplevel()
     window.geometry('300x300')
     window.title('Youtube Downloader')
@@ -42,21 +41,24 @@ def new_window():
                   font=('Arial', 12, BOLD), background='#1e2124', foreground='#ED9121')
     title.pack()
 
+    #Link input Title
     link_input = Label(window, text="Paste link here",
                        font=(3), background='#1e2124', foreground='white')
     link_input.pack(pady=10)
 
+    #Converting link to a string
     set_link = StringVar()
 
+    #Link Entry Box
     pastelink = Entry(window, width=30, textvariable=set_link)
     pastelink.pack(pady=5)
-
+    #Selected Directory
     def chooseDir():
         global video_location
         path = filedialog.askdirectory(title="Choose a download directory")
         video_location = path
         Label(window, text=path, background='black').place(x=240, y=300)
-
+    #Download Video Function
     def downloadVideo():
         ytbLink = set_link.get()
         ytbvideo = YouTube(ytbLink).streams.filter(
@@ -79,6 +81,12 @@ def rclick_menu(event):
     finally:
         rightClick_menu.grab_release()
 
+def reset_transparency():
+    root.attributes('-alpha', 1.0)
+
+def transparency():
+    root.attributes('-alpha', 0.5)
+
 # Open Github Repo
 
 
@@ -94,7 +102,7 @@ def about():
 
 
 def current_version():
-    messagebox.showinfo('Current Version', 'V1.0.1')
+    messagebox.showinfo('Current Version', 'V1.1.1')
 
 # bug report function
 
@@ -245,15 +253,16 @@ def gitsearch(e):
 
 # Search with DuckDuckGo
 
-
 def dckdckgosearch(e):
     global selected
     if text.selection_get():
         # Grab selected text from textbox
         selected = text.selection_get()
+        #replace selected text with search enging
         s = str(selected.replace("duckduckgo", ""))
         link = "https://duckduckgo.com/?q=" + s
         webbrowser.open_new_tab(link)
+#TODO add google to search engine, or let user select sarch engine
 
 # Shortcuts tile
 
@@ -299,29 +308,18 @@ def ItalicText():
 
 # Change Text Color
 
-
+#fix
 def text_color():
-    colorset = colorchooser.askcolor()[1]
-    if colorset:
-        color_font = font.Font(text, text.cget("font"))
-
-        # Configure Tag
-        text.tag_configure("colored", font=color_font, foreground=colorset)
+    text.tag_add("colored", "1.11","1.17")
+    text.tag_config("colored", background= "yellow", foreground= "black")
+        
         # create current tag var
-        tags_set = text.tag_names("sel.first")
+    tags_set = text.tag_names("sel.first")
         # if statmenmet to see if tag has been set/used
-        if "colored" in tags_set:
-            text.tag_remove("colored", "sel.first", "sel.last")
-        else:
-            text.tag_add("colored", "sel.first", "sel.last")
-
-# Change Color of all text
-
-
-def all_text_color():
-    colorset = colorchooser.askcolor()[1]
-    if colorset:
-        text.config(fg=colorset)
+    if "colored" in tags_set:
+        text.tag_remove("colored", "sel.first", "sel.last")
+    else:
+        text.tag_add("colored", "sel.first", "sel.last")
 
 # Select all text
 
@@ -340,8 +338,11 @@ def clear_all():
 
 
 def update(event):
-    BottomBar.config(text="Word Count: " +
-                     str(len(text.get("1.0", 'end-1c'))))
+    text = event.widget
+    text_count = text.get(1.0, END)
+    words = text_count.split(" ")
+    count_num = len(words) - 1
+    BottomBar.config(text="Word count: {}".format(count_num))
 
 # Zoom
 
@@ -366,7 +367,7 @@ def reset_font_size():
 
 
 def reset_window():
-    root.geometry("1400x800+200+200")
+    root.geometry("800x600+100+50")
 
 
 # create toolbar frame
@@ -426,13 +427,10 @@ edit_menu.add_command(
 # Tools Menu
 tools_menu = Menu(menu, tearoff=False)
 menu.add_cascade(label="Tools", menu=tools_menu)
-tools_menu.add_command(
-    label="Change color of selected Text ", command=text_color)
-tools_menu.add_command(label="Change color of All Text",
-                       command=all_text_color)
-tools_menu.add_separator()
+
 tools_menu.add_command(label="Bold Selected Text", command=BoldText)
 tools_menu.add_command(label="Italic Selected Text", command=ItalicText)
+tools_menu.add_command(label="Highlight Selected Text ", command=text_color)
 tools_menu.add_separator()
 tools_menu.add_command(label="Search with Youtube",
                        command=lambda: ytsearch(''), accelerator="Ctrl+E")
@@ -440,9 +438,10 @@ tools_menu.add_command(label="Search with Github",
                        command=lambda: gitsearch(''), accelerator="Ctrl+G")
 tools_menu.add_command(label="Search with DuckDuckGo",
                        command=lambda: dckdckgosearch(''), accelerator="Ctrl+H")
-tools_menu.add_separator()
 tools_menu.add_command(label="YouTube Video Downloader", command=new_window)
-
+tools_menu.add_separator()
+tools_menu.add_command(label="Half Transparency", command=transparency)
+tools_menu.add_command(label="Reset Transparency", command=reset_transparency)
 
 # Window menu
 view_menu = Menu(menu, tearoff=False)
@@ -456,7 +455,7 @@ view_menu.add_command(label="Reset Window", command=reset_window)
 # Help menu
 help_menu = Menu(menu, tearoff=False)
 menu.add_cascade(label="Help", menu=help_menu)
-help_menu.add_command(label="Github Repo", command=openweb)
+help_menu.add_command(label="Github Repository", command=openweb)
 help_menu.add_command(label="About", command=about)
 help_menu.add_command(label="Shortcut", command=shortcuts)
 help_menu.add_command(label="Bug Report", command=bug_report)
@@ -473,13 +472,12 @@ root.bind('<Control-Key-g>', gitsearch)
 root.bind('<Control-Key-h>', dckdckgosearch)
 root.bind('<Control-Key-a>', select_all)
 root.bind('<Control-Key-s>', filesave)
-text.bind('<KeyPress>', update)
 text.bind('<KeyRelease>', update)
 text.bind("<Button - 3>", rclick_menu)
 
 # Undo And redo
-undo_icon = PhotoImage(file='icon_undo.png')
-redo_icon = PhotoImage(file='icon_redo.png')
+undo_icon = PhotoImage(file='assets/icon_undo.png')
+redo_icon = PhotoImage(file='assets/icon_redo.png')
 UndoBtn = Button(toolbar, image=undo_icon, command=text.edit_undo)
 UndoBtn.grid(row=0, column=0, sticky=W, padx=5)
 
@@ -492,8 +490,8 @@ RedoBtn.grid(row=0, column=1, sticky=W, padx=5)
 def click_theme():
     global root
     # WHEN CLICK IF THE THEME IS DARK IT SET TO LIGHT
-    is_dark = root.tk.call("ttk::style", "theme", "use") == "sun-valley-dark"
-    if is_dark:
+    dark_theme_active = root.tk.call("ttk::style", "theme", "use") == "sun-valley-dark"
+    if dark_theme_active:
         root.tk.call("set_theme", "light")
         text.config(bg='white', foreground='#1e2124')
         theme_button.config(text="Dark Mode")

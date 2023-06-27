@@ -20,7 +20,7 @@ PolarNotes is an experimental text based notepad with advanced features such as 
 ## To-Do
 - YouTube Video Downloader ✔
 - Performance Fixes 🔳
-- Fix Theme Issues 🔳
+- Fix Theme Issues ✔
 
 
 ## Credits
