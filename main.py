@@ -88,12 +88,12 @@ def reset_transparency():
     root.attributes('-alpha', 1.0)
 
 
-def medium_transparency():
-    root.attributes('-alpha', 0.5)
-
-
 def high_transparency():
     root.attributes('-alpha', 0.25)
+
+
+def medium_transparency():
+    root.attributes('-alpha', 0.5)
 
 
 def low_transparency():
