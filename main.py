@@ -24,14 +24,14 @@ root.resizable(True, True)
 global open_status_name
 global selected
 global font1
-#Creating Variables and setting fonts
+# Creating Variables and setting fonts
 font1 = ['Arial', 16]
 selected = False
 open_status_name = False
 
 
 def new_window():
-    #Creating Side Window for YT Video Downloader
+    # Creating Side Window for YT Video Downloader
     window = Toplevel()
     window.geometry('300x300')
     window.title('Youtube Downloader')
@@ -41,24 +41,26 @@ def new_window():
                   font=('Arial', 12, BOLD), background='#1e2124', foreground='#ED9121')
     title.pack()
 
-    #Link input Title
+    # Link input Title
     link_input = Label(window, text="Paste link here",
                        font=(3), background='#1e2124', foreground='white')
     link_input.pack(pady=10)
 
-    #Converting link to a string
+    # Converting link to a string
     set_link = StringVar()
 
-    #Link Entry Box
+    # Link Entry Box
     pastelink = Entry(window, width=30, textvariable=set_link)
     pastelink.pack(pady=5)
-    #Selected Directory
+    # Selected Directory
+
     def chooseDir():
         global video_location
         path = filedialog.askdirectory(title="Choose a download directory")
         video_location = path
         Label(window, text=path, background='black').place(x=240, y=300)
-    #Download Video Function
+    # Download Video Function
+
     def downloadVideo():
         ytbLink = set_link.get()
         ytbvideo = YouTube(ytbLink).streams.filter(
@@ -81,8 +83,10 @@ def rclick_menu(event):
     finally:
         rightClick_menu.grab_release()
 
+
 def reset_transparency():
     root.attributes('-alpha', 1.0)
+
 
 def transparency():
     root.attributes('-alpha', 0.5)
@@ -253,16 +257,17 @@ def gitsearch(e):
 
 # Search with DuckDuckGo
 
+
 def dckdckgosearch(e):
     global selected
     if text.selection_get():
         # Grab selected text from textbox
         selected = text.selection_get()
-        #replace selected text with search enging
+        # replace selected text with search enging
         s = str(selected.replace("duckduckgo", ""))
         link = "https://duckduckgo.com/?q=" + s
         webbrowser.open_new_tab(link)
-#TODO add google to search engine, or let user select sarch engine
+# TODO add google to search engine, or let user select sarch engine
 
 # Shortcuts tile
 
@@ -308,14 +313,16 @@ def ItalicText():
 
 # Change Text Color
 
-#fix
+# fix
+
+
 def text_color():
-    text.tag_add("colored", "1.11","1.17")
-    text.tag_config("colored", background= "yellow", foreground= "black")
-        
-        # create current tag var
+    text.tag_add("colored", "1.11", "1.17")
+    text.tag_config("colored", background="yellow", foreground="black")
+
+    # create current tag var
     tags_set = text.tag_names("sel.first")
-        # if statmenmet to see if tag has been set/used
+    # if statmenmet to see if tag has been set/used
     if "colored" in tags_set:
         text.tag_remove("colored", "sel.first", "sel.last")
     else:
@@ -342,7 +349,7 @@ def update(event):
     text_count = text.get(1.0, END)
     words = text_count.split(" ")
     count_num = len(words) - 1
-    BottomBar.config(text="Word count: {}".format(count_num))
+    BottomBar.config(text="Word Count: {}".format(count_num))
 
 # Zoom
 
@@ -490,7 +497,8 @@ RedoBtn.grid(row=0, column=1, sticky=W, padx=5)
 def click_theme():
     global root
     # WHEN CLICK IF THE THEME IS DARK IT SET TO LIGHT
-    dark_theme_active = root.tk.call("ttk::style", "theme", "use") == "sun-valley-dark"
+    dark_theme_active = root.tk.call(
+        "ttk::style", "theme", "use") == "sun-valley-dark"
     if dark_theme_active:
         root.tk.call("set_theme", "light")
         text.config(bg='white', foreground='#1e2124')
